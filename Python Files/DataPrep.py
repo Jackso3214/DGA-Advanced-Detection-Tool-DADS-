@@ -11,14 +11,13 @@ import pickle
 #custom imports
 import EntropyCalculator as ent
 import VowelConsonantsCalculator as vowcon
-import whoisExtractor as whois
 import FeatureEngineering as feat
 import DomainNgrams as dngrams
 import NumCountCalculator as numCount
 
 #load Dataset function
 def load_DGA_data():
-    return pd.read_csv("CSVs\\tenkset.csv")
+    return pd.read_csv("CSVs\\trainingDataset\\dga_dataset_10k_set1.csv")
 
 def prepData():
     #load the dataset
@@ -181,7 +180,7 @@ def prepData():
 
     
     #output to a file
-    DGAList.to_csv("CSVs\outputTable10k.csv")
+    DGAList.to_csv("CSVs\output\outputTable10k.csv")
 
 
 

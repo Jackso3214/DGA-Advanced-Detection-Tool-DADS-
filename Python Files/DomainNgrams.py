@@ -6,7 +6,7 @@ import re
 
 
 def load_DGA_data():
-    return pd.read_csv("CSVs\\tenkSet.csv")
+    return pd.read_csv("CSVs\\trainingDataset\\dga_dataset_10k_set1.csv")
     #return pd.read_csv("CSVs\\Testing_Set_Take_1.csv")
     
 
