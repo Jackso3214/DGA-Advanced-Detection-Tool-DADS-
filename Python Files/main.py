@@ -10,7 +10,7 @@ prep.prepData()
 dataset = pd.read_csv("CSVs\\outputTable10k.csv")
 trainedModel = logreg.logRegModel(dataset)
 
-testing = prep.prepDataTest("google.com")
+testing = prep.prepDataTest("doh123145.test")
 result = trainedModel.predict(testing)
 print(testing)
 print(result)

@@ -14,6 +14,7 @@ import VowelConsonantsCalculator as vowcon
 import whoisExtractor as whois
 import FeatureEngineering as feat
 import DomainNgrams as dngrams
+import NumCountCalculator as numCount
 
 #load Dataset function
 def load_DGA_data():
@@ -63,6 +64,12 @@ def prepData():
     DGAList = DGAList.assign(VowelConsRatio=lambda x: round(x['Vowel'] / x["Consonant"], 5))
     DGAList = DGAList.assign(EntropyLength=lambda x: round(x['Entropy'] / x["Length"], 5))
     #print(DGAList)
+
+    #calculate numcount and create a column
+    temp.clear()
+    for ind in DGAList.index:
+        temp.append(numCount.numCount(DGAList['Domain'][ind]))
+    DGAList['CountNum'] = temp
 
     #calculate and create a ngram score column FOR LEGIT Ngrams
     #variables for the ngram scores
@@ -202,6 +209,9 @@ def prepDataTest(string):
     vowelConsRatio = round(vowel / consonant, 5)
     entropyLenRatio = round(entropy / length, 5)
 
+    #calculate numcount and create a column
+    countNum = numCount.numCount(domain)
+
     #calculate and create a ngram score column FOR LEGIT NGRAMS
     
     top2String, top3String, top4String, top5String = dngrams.topNgramsCalculation()
@@ -259,7 +269,7 @@ def prepDataTest(string):
             scoreDGA[3] += 1
     
     #note: Domain,Verdict,Entropy,Vowel,Consonant,Length,VN,VowelConsRatio,EntropyLength,ngram2Score,ngram3Score,ngram4Score,ngram5Score,ngramTotalScore
-    data = [[entropy, vowel, consonant, length, vowelConsRatio, entropyLenRatio, score[0], score[1], score[2], score[3], totalScore, scoreDGA[0], scoreDGA[1], scoreDGA[2], scoreDGA[3], totalScoreDGA]]
-    df = pd.DataFrame(data, columns=["Entropy", "Vowel", "Consonant", "Length", "VowelConsRatio", "EntropyLength", "ngram2ScoreLegit", "ngram3ScoreLegit", "ngram4ScoreLegit", "ngram5ScoreLegit", "ngramTotalScoreLegit", "ngram2ScoreDGA", "ngram3ScoreDGA", "ngram4ScoreDGA", "ngram5ScoreDGA", "ngramTotalScoreDGA"])
+    data = [[entropy, vowel, consonant, length, vowelConsRatio, entropyLenRatio, countNum ,score[0], score[1], score[2], score[3], totalScore, scoreDGA[0], scoreDGA[1], scoreDGA[2], scoreDGA[3], totalScoreDGA]]
+    df = pd.DataFrame(data, columns=["Entropy", "Vowel", "Consonant", "Length", "VowelConsRatio", "EntropyLength", "CountNum" ,"ngram2ScoreLegit", "ngram3ScoreLegit", "ngram4ScoreLegit", "ngram5ScoreLegit", "ngramTotalScoreLegit", "ngram2ScoreDGA", "ngram3ScoreDGA", "ngram4ScoreDGA", "ngram5ScoreDGA", "ngramTotalScoreDGA"])
     return df
     #lmao
