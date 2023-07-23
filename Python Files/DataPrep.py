@@ -17,7 +17,11 @@ import NumCountCalculator as numCount
 
 #load Dataset function
 def load_DGA_data():
-    return pd.read_csv("CSVs\\trainingDataset\\dga_dataset_10k_set1.csv")
+    return pd.read_csv("CSVs\\trainingDataset\\dga_dataset_10k_set2.csv")
+
+def Export_DGA_data(dataframe):
+    dataframe.to_csv("CSVs\output\outputTable10k_set2.csv")
+    
 
 def prepData():
     #load the dataset
@@ -180,7 +184,8 @@ def prepData():
 
     
     #output to a file
-    DGAList.to_csv("CSVs\output\outputTable10k.csv")
+    Export_DGA_data(DGAList)
+    
 
 
 
