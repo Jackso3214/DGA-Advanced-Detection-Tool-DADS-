@@ -12,7 +12,7 @@ dataset = pd.read_csv("CSVs\output\outputTable10k_set1.csv")
 trainedModel = logreg.logRegModel(dataset)
 sm.savePickle(trainedModel)
 
-testing = prep.prepDataTest("3216549865165.test")
+testing = prep.prepDataTest("microsoft.com")
 result = trainedModel.predict(testing)
 print(testing)
 print(result)

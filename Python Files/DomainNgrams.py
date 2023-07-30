@@ -7,13 +7,9 @@ import csv
 
 
 
-def load_DGA_data():
-    return pd.read_csv("CSVs\\trainingDataset\\dga_dataset_10k_set1.csv")
-    #return pd.read_csv("CSVs\\Testing_Set_Take_1.csv")
-    
 
 #top ngrams in all legit domains
-def topNgramsCalculation():
+def topNgramsCalculation(loadDgaData):
 
     #set variables
     
@@ -30,7 +26,7 @@ def topNgramsCalculation():
     
 
     #import dataset
-    dataset = load_DGA_data()
+    dataset = loadDgaData
 
     #regex to remove the TLD 
     for ind in dataset.index:
@@ -157,12 +153,31 @@ def topNgramsCalculation():
     
     #print the resulting top Ngrams
     #print(top2String, '\n\n', top3String, '\n\n', top4String, '\n\n', top5String, '\n\n')
+    #write the top NGRAMS to a file
+    with open("CSVs\\topNgrams\\top2String.csv", "w", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerows(top2String)
+        f.close()
 
+    with open("CSVs\\topNgrams\\top3String.csv", "w", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerows(top3String)
+        f.close()
+
+    with open("CSVs\\topNgrams\\top4String.csv", "w", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerows(top4String)
+        f.close()
+
+    with open("CSVs\\topNgrams\\top5String.csv", "w", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerows(top5String)
+        f.close()
     
     return top2String, top3String, top4String, top5String
 
 #top ngrams in DGA domains
-def topNgramsCalculationDGA():
+def topNgramsCalculationDGA(loadDgaData):
 
     #set variables
     
@@ -179,7 +194,7 @@ def topNgramsCalculationDGA():
     
 
     #import dataset
-    dataset = load_DGA_data()
+    dataset = loadDgaData
 
     #regex to remove the TLD 
     for ind in dataset.index:
@@ -308,21 +323,25 @@ def topNgramsCalculationDGA():
     #print(top2String, '\n\n', top3String, '\n\n', top4String, '\n\n', top5String, '\n\n')
 
     #write the top NGRAMS to a file
-    with open("CSVs\\topNgrams\\top2String.csv", "w", newline="") as f:
+    with open("CSVs\\topNgrams\\top2StringDGA.csv", "w", newline="") as f:
         writer = csv.writer(f)
         writer.writerows(top2String)
+        f.close()
 
-    with open("CSVs\\topNgrams\\top3String.csv", "w", newline="") as f:
+    with open("CSVs\\topNgrams\\top3StringDGA.csv", "w", newline="") as f:
         writer = csv.writer(f)
         writer.writerows(top3String)
+        f.close()
 
-    with open("CSVs\\topNgrams\\top4String.csv", "w", newline="") as f:
+    with open("CSVs\\topNgrams\\top4StringDGA.csv", "w", newline="") as f:
         writer = csv.writer(f)
         writer.writerows(top4String)
+        f.close()
 
-    with open("CSVs\\topNgrams\\top5String.csv", "w", newline="") as f:
+    with open("CSVs\\topNgrams\\top5StringDGA.csv", "w", newline="") as f:
         writer = csv.writer(f)
         writer.writerows(top5String)
+        f.close()
     
     return top2String, top3String, top4String, top5String
 

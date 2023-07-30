@@ -19,23 +19,25 @@ import NumCountCalculator as numCount
 
 #load Dataset function
 def load_DGA_data():
-    return pd.read_csv("CSVs\\trainingDataset\\dga_dataset_10k_set2.csv")
+    return pd.read_csv("CSVs\\trainingDataset\\dga_dataset_10k_set1.csv")
 
 def Export_DGA_data(dataframe):
-    dataframe.to_csv("CSVs\output\outputTable10k_set2.csv")
+    dataframe.to_csv("CSVs\output\outputTable10k_set1.csv")
 
 def readNgram(path):
     temp = []
-    with open("top2String.csv") as file:
+    with open(path) as file:
                     reader = csv.reader(file)
                     for row in reader:
                         temp.append(row)
+                    file.close()
     return temp
     
 
 def prepData():
     #load the dataset
     DGAList = load_DGA_data()
+    unmodifiedDGAList = DGAList
     #calculate size of dataset
     #print(DGAList.head())
     #print(DGAList.shape)
@@ -92,17 +94,19 @@ def prepData():
     tempTotalScore = 0
     tempScore = 0
 
-    
+    top2String = []
+    top3String = []
+    top4String = []
+    top5String = []
+
+   
     
     #if topNgrams exist in folder, read those otherwise generate it
-    #generate top NGrams
-    top2String, top3String, top4String, top5String = dngrams.topNgramsCalculation()
+    #generate top NGrams for legit
     #if file exists in the specific folder
-
     #top 2 ngrams
-    csvFolder = "CSVs\\topNgrams\\"
     #if folder exists
-    if os.path.isfile("CSVs"):
+    if os.path.isdir("CSVs"):
         #if the csv file exists
         if os.path.isfile("CSVs\\topNgrams\\top2String.csv"):
             #read the csv file
@@ -111,7 +115,7 @@ def prepData():
             top4String = readNgram("CSVs\\topNgrams\\top4String.csv")
             top5String = readNgram("CSVs\\topNgrams\\top5String.csv")
         else:
-            top2String, top3String, top4String, top5String = dngrams.topNgramsCalculation()
+            top2String, top3String, top4String, top5String = dngrams.topNgramsCalculation(unmodifiedDGAList)
             
     #if the folder doesnt exist
     else:
@@ -123,7 +127,9 @@ def prepData():
             top4String = readNgram("CSVs\\topNgrams\\top4String.csv")
             top5String = readNgram("CSVs\\topNgrams\\top5String.csv")
         else:
-            top2String, top3String, top4String, top5String = dngrams.topNgramsCalculation()
+            top2String, top3String, top4String, top5String = dngrams.topNgramsCalculation(unmodifiedDGAList)
+    
+    
             
     #go through each domain
     for ind in DGAList.index:
@@ -178,7 +184,33 @@ def prepData():
     score = [[],[],[],[]]
     tempTotalScore = 0
     tempScore = 0
-    top2String, top3String, top4String, top5String = dngrams.topNgramsCalculationDGA()
+
+    #top 2 ngrams
+    #if folder exists
+    if os.path.isdir("CSVs"):
+        #if the csv file exists
+        if os.path.isfile("CSVs\\topNgrams\\top2StringDGA.csv"):
+            #read the csv file
+            top2String = readNgram("CSVs\\topNgrams\\top2StringDGA.csv")
+            top3String = readNgram("CSVs\\topNgrams\\top3StringDGA.csv")
+            top4String = readNgram("CSVs\\topNgrams\\top4StringDGA.csv")
+            top5String = readNgram("CSVs\\topNgrams\\top5StringDGA.csv")
+        else:
+            top2String, top3String, top4String, top5String = dngrams.topNgramsCalculationDGA(unmodifiedDGAList)
+            
+    #if the folder doesnt exist
+    else:
+        #check to see if the csv file is in the same folder as python file
+        if os.path.isfile("top2StringDGA.csv"):
+            #read the file if it is
+            top2String = readNgram("CSVs\\topNgrams\\top2StringDGA.csv")
+            top3String = readNgram("CSVs\\topNgrams\\top3StringDGA.csv")
+            top4String = readNgram("CSVs\\topNgrams\\top4StringDGA.csv")
+            top5String = readNgram("CSVs\\topNgrams\\top5StringDGA.csv")
+        else:
+            top2String, top3String, top4String, top5String = dngrams.topNgramsCalculationDGA(unmodifiedDGAList)
+
+
     #go through each domain
     for ind in DGAList.index:
         #calculate each score of each ngram
@@ -238,7 +270,10 @@ def prepDataTest(string):
     domain = string
 
     #create temporary lists
-    
+    top2String = []
+    top3String = []
+    top4String = []
+    top5String = []
 
     #calculate and create an Entropy column
     entropy = ent.Entropy(domain)
@@ -260,8 +295,29 @@ def prepDataTest(string):
     countNum = numCount.numCount(domain)
 
     #calculate and create a ngram score column FOR LEGIT NGRAMS
-    
-    top2String, top3String, top4String, top5String = dngrams.topNgramsCalculation()
+    #if topNgrams exist in folder, read those otherwise generate it
+    #generate top NGrams for legit
+    #if file exists in the specific folder
+    #top 2 ngrams
+    #if folder exists
+    if os.path.isdir("CSVs"):
+        #if the csv file exists
+        if os.path.isfile("CSVs\\topNgrams\\top2String.csv"):
+            #read the csv file
+            top2String = readNgram("CSVs\\topNgrams\\top2String.csv")
+            top3String = readNgram("CSVs\\topNgrams\\top3String.csv")
+            top4String = readNgram("CSVs\\topNgrams\\top4String.csv")
+            top5String = readNgram("CSVs\\topNgrams\\top5String.csv")
+            
+    #if the folder doesnt exist
+    else:
+        #check to see if the csv file is in the same folder as python file
+        if os.path.isfile("top2String.csv"):
+            #read the file if it is
+            top2String = readNgram("CSVs\\topNgrams\\top2String.csv")
+            top3String = readNgram("CSVs\\topNgrams\\top3String.csv")
+            top4String = readNgram("CSVs\\topNgrams\\top4String.csv")
+            top5String = readNgram("CSVs\\topNgrams\\top5String.csv")
 
     testDomain = re.split('.[A-Za-z]*\.*$', domain)[0]
     
@@ -289,7 +345,29 @@ def prepDataTest(string):
 
     #calculate and create a ngram score column FOR DGA NGRAMS
     
-    top2String, top3String, top4String, top5String = dngrams.topNgramsCalculationDGA()
+    #if topNgrams exist in folder, read those otherwise generate it
+    #generate top NGrams for legit
+    #if file exists in the specific folder
+    #top 2 ngrams
+    #if folder exists
+    if os.path.isdir("CSVs"):
+        #if the csv file exists
+        if os.path.isfile("CSVs\\topNgrams\\top2StringDGA.csv"):
+            #read the csv file
+            top2String = readNgram("CSVs\\topNgrams\\top2StringDGA.csv")
+            top3String = readNgram("CSVs\\topNgrams\\top3StringDGA.csv")
+            top4String = readNgram("CSVs\\topNgrams\\top4StringDGA.csv")
+            top5String = readNgram("CSVs\\topNgrams\\top5StringDGA.csv")
+            
+    #if the folder doesnt exist
+    else:
+        #check to see if the csv file is in the same folder as python file
+        if os.path.isfile("top2String.csv"):
+            #read the file if it is
+            top2String = readNgram("CSVs\\topNgrams\\top2StringDGA.csv")
+            top3String = readNgram("CSVs\\topNgrams\\top3StringDGA.csv")
+            top4String = readNgram("CSVs\\topNgrams\\top4StringDGA.csv")
+            top5String = readNgram("CSVs\\topNgrams\\top5StringDGA.csv")
 
     testDomain = re.split('.[A-Za-z]*\.*$', domain)[0]
     
