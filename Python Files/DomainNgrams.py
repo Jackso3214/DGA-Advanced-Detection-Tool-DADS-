@@ -3,6 +3,8 @@ import nltk
 from nltk import ngrams
 from collections import Counter
 import re
+import csv
+
 
 
 def load_DGA_data():
@@ -305,6 +307,22 @@ def topNgramsCalculationDGA():
     #print the resulting top Ngrams DGA
     #print(top2String, '\n\n', top3String, '\n\n', top4String, '\n\n', top5String, '\n\n')
 
+    #write the top NGRAMS to a file
+    with open("CSVs\\topNgrams\\top2String.csv", "w", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerows(top2String)
+
+    with open("CSVs\\topNgrams\\top3String.csv", "w", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerows(top3String)
+
+    with open("CSVs\\topNgrams\\top4String.csv", "w", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerows(top4String)
+
+    with open("CSVs\\topNgrams\\top5String.csv", "w", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerows(top5String)
     
     return top2String, top3String, top4String, top5String
 

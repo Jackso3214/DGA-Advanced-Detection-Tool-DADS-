@@ -6,6 +6,8 @@ from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
 from sklearn.feature_selection import RFE
 import re
+import os.path
+import csv
 import pickle
 
 #custom imports
@@ -21,6 +23,14 @@ def load_DGA_data():
 
 def Export_DGA_data(dataframe):
     dataframe.to_csv("CSVs\output\outputTable10k_set2.csv")
+
+def readNgram(path):
+    temp = []
+    with open("top2String.csv") as file:
+                    reader = csv.reader(file)
+                    for row in reader:
+                        temp.append(row)
+    return temp
     
 
 def prepData():
@@ -81,7 +91,40 @@ def prepData():
     score = [[],[],[],[]]
     tempTotalScore = 0
     tempScore = 0
+
+    
+    
+    #if topNgrams exist in folder, read those otherwise generate it
+    #generate top NGrams
     top2String, top3String, top4String, top5String = dngrams.topNgramsCalculation()
+    #if file exists in the specific folder
+
+    #top 2 ngrams
+    csvFolder = "CSVs\\topNgrams\\"
+    #if folder exists
+    if os.path.isfile("CSVs"):
+        #if the csv file exists
+        if os.path.isfile("CSVs\\topNgrams\\top2String.csv"):
+            #read the csv file
+            top2String = readNgram("CSVs\\topNgrams\\top2String.csv")
+            top3String = readNgram("CSVs\\topNgrams\\top3String.csv")
+            top4String = readNgram("CSVs\\topNgrams\\top4String.csv")
+            top5String = readNgram("CSVs\\topNgrams\\top5String.csv")
+        else:
+            top2String, top3String, top4String, top5String = dngrams.topNgramsCalculation()
+            
+    #if the folder doesnt exist
+    else:
+        #check to see if the csv file is in the same folder as python file
+        if os.path.isfile("top2String.csv"):
+            #read the file if it is
+            top2String = readNgram("CSVs\\topNgrams\\top2String.csv")
+            top3String = readNgram("CSVs\\topNgrams\\top3String.csv")
+            top4String = readNgram("CSVs\\topNgrams\\top4String.csv")
+            top5String = readNgram("CSVs\\topNgrams\\top5String.csv")
+        else:
+            top2String, top3String, top4String, top5String = dngrams.topNgramsCalculation()
+            
     #go through each domain
     for ind in DGAList.index:
         #calculate each score of each ngram
