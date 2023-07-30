@@ -14,7 +14,9 @@ sm.savePickle(trainedModel)
 
 testing = prep.prepDataTest("microsoft.com")
 result = trainedModel.predict(testing)
+resultProbility = trainedModel.predict_proba(testing)
 print(testing)
 print(result)
+print(resultProbility)
 
 
