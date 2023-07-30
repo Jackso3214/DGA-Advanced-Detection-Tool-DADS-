@@ -75,8 +75,20 @@ def prepData():
     #print(DGAList)
 
     #convert verdict to a number column
+
+    VowelConsRatioTemp = []
+
+    #calculate ratio of vowel and consonant
+    for index, row in DGAList.iterrows():
+        if row['Consonant'] == 0 or row['Vowel'] == 0:
+            VowelConsRatioTemp.append(0)
+            continue
+        else:
+            VowelConsRatioTemp.append(round(row['Vowel'] / row["Consonant"], 5))
+    
+
     DGAList['VN'] = DGAList['Verdict'].apply(lambda x: feat.DGAtoNum(x))
-    DGAList = DGAList.assign(VowelConsRatio=lambda x: round(x['Vowel'] / x["Consonant"], 5))
+    DGAList['VowelConsRatio'] = VowelConsRatioTemp
     DGAList = DGAList.assign(EntropyLength=lambda x: round(x['Entropy'] / x["Length"], 5))
     #print(DGAList)
 
@@ -122,10 +134,10 @@ def prepData():
         #check to see if the csv file is in the same folder as python file
         if os.path.isfile("top2String.csv"):
             #read the file if it is
-            top2String = readNgram("CSVs\\topNgrams\\top2String.csv")
-            top3String = readNgram("CSVs\\topNgrams\\top3String.csv")
-            top4String = readNgram("CSVs\\topNgrams\\top4String.csv")
-            top5String = readNgram("CSVs\\topNgrams\\top5String.csv")
+            top2String = readNgram("top2String.csv")
+            top3String = readNgram("top3String.csv")
+            top4String = readNgram("top4String.csv")
+            top5String = readNgram("top5String.csv")
         else:
             top2String, top3String, top4String, top5String = dngrams.topNgramsCalculation(unmodifiedDGAList)
     
@@ -203,10 +215,10 @@ def prepData():
         #check to see if the csv file is in the same folder as python file
         if os.path.isfile("top2StringDGA.csv"):
             #read the file if it is
-            top2String = readNgram("CSVs\\topNgrams\\top2StringDGA.csv")
-            top3String = readNgram("CSVs\\topNgrams\\top3StringDGA.csv")
-            top4String = readNgram("CSVs\\topNgrams\\top4StringDGA.csv")
-            top5String = readNgram("CSVs\\topNgrams\\top5StringDGA.csv")
+            top2String = readNgram("top2StringDGA.csv")
+            top3String = readNgram("top3StringDGA.csv")
+            top4String = readNgram("top4StringDGA.csv")
+            top5String = readNgram("top5StringDGA.csv")
         else:
             top2String, top3String, top4String, top5String = dngrams.topNgramsCalculationDGA(unmodifiedDGAList)
 
@@ -264,7 +276,7 @@ def prepData():
 
 
 
-
+#function for preparing individual domains 
 def prepDataTest(string):
     #assign string
     domain = string
@@ -288,7 +300,10 @@ def prepDataTest(string):
     length = len(domain)
 
     #convert verdict to a number column
-    vowelConsRatio = round(vowel / consonant, 5)
+    if consonant == 0 or vowel == 0:
+        vowelConsRatio = 0
+    else:
+        vowelConsRatio = round(vowel / consonant, 5)
     entropyLenRatio = round(entropy / length, 5)
 
     #calculate numcount and create a column
@@ -314,10 +329,10 @@ def prepDataTest(string):
         #check to see if the csv file is in the same folder as python file
         if os.path.isfile("top2String.csv"):
             #read the file if it is
-            top2String = readNgram("CSVs\\topNgrams\\top2String.csv")
-            top3String = readNgram("CSVs\\topNgrams\\top3String.csv")
-            top4String = readNgram("CSVs\\topNgrams\\top4String.csv")
-            top5String = readNgram("CSVs\\topNgrams\\top5String.csv")
+            top2String = readNgram("Ctop2String.csv")
+            top3String = readNgram("top3String.csv")
+            top4String = readNgram("top4String.csv")
+            top5String = readNgram("top5String.csv")
 
     testDomain = re.split('.[A-Za-z]*\.*$', domain)[0]
     
@@ -364,10 +379,10 @@ def prepDataTest(string):
         #check to see if the csv file is in the same folder as python file
         if os.path.isfile("top2String.csv"):
             #read the file if it is
-            top2String = readNgram("CSVs\\topNgrams\\top2StringDGA.csv")
-            top3String = readNgram("CSVs\\topNgrams\\top3StringDGA.csv")
-            top4String = readNgram("CSVs\\topNgrams\\top4StringDGA.csv")
-            top5String = readNgram("CSVs\\topNgrams\\top5StringDGA.csv")
+            top2String = readNgram("top2StringDGA.csv")
+            top3String = readNgram("top3StringDGA.csv")
+            top4String = readNgram("top4StringDGA.csv")
+            top5String = readNgram("top5StringDGA.csv")
 
     testDomain = re.split('.[A-Za-z]*\.*$', domain)[0]
     
