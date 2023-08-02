@@ -50,14 +50,18 @@ def prepData(path, outputPath):
 
     #calculate and create an Entropy column
     for ind in DGAList.index:
-        temp.append(ent.Entropy(DGAList['Domain'][ind]))
+        testDomainSplit = re.split('.[A-Za-z]*\.*$', DGAList['Domain'][ind])[0]
+        temp.append(ent.Entropy(testDomainSplit))
+        #temp.append(ent.Entropy(DGAList['Domain'][ind]))
     DGAList['Entropy'] = temp
     
 
     #calculate and create an vowerl and consonants column
     temp.clear()
     for ind in DGAList.index:
-        temp.append(vowcon.VowelConsonants(DGAList['Domain'][ind]))
+        testDomainSplit = re.split('.[A-Za-z]*\.*$', DGAList['Domain'][ind])[0]
+        temp.append(vowcon.VowelConsonants(testDomainSplit))
+        #temp.append(vowcon.VowelConsonants(DGAList['Domain'][ind]))
     for val in temp:
         vowelTemp.append(val['vowel'])
         consTemp.append(val['consonant'])
@@ -69,7 +73,9 @@ def prepData(path, outputPath):
     #calculate and create an Length column
     temp.clear()
     for ind in DGAList.index:
-        temp.append(len(DGAList['Domain'][ind]))
+        testDomainSplit = re.split('.[A-Za-z]*\.*$', DGAList['Domain'][ind])[0]
+        temp.append(len(testDomainSplit))
+        #temp.append(len(DGAList['Domain'][ind]))
     DGAList['Length'] = temp
 
     DGAList = DGAList.sample(frac=1)
@@ -280,7 +286,8 @@ def prepData(path, outputPath):
 #function for preparing individual domains 
 def prepDataTest(string):
     #assign string
-    domain = string
+    domain = re.split('.[A-Za-z]*\.*$', string)[0]
+    #domain = string
 
     #create temporary lists
     top2String = []
@@ -335,8 +342,9 @@ def prepDataTest(string):
             top4String = readNgram("top4String.csv")
             top5String = readNgram("top5String.csv")
 
-    testDomain = re.split('.[A-Za-z]*\.*$', domain)[0]
-    
+    #testDomain = re.split('.[A-Za-z]*\.*$', domain)[0]
+    testDomain = domain
+
     totalScore = 0
     score = [0,0,0,0]
     for ngram in top2String:
@@ -385,8 +393,9 @@ def prepDataTest(string):
             top4String = readNgram("top4StringDGA.csv")
             top5String = readNgram("top5StringDGA.csv")
 
-    testDomain = re.split('.[A-Za-z]*\.*$', domain)[0]
-    
+    #testDomain = re.split('.[A-Za-z]*\.*$', domain)[0]
+    testDomain = domain
+
     totalScoreDGA = 0
     scoreDGA = [0,0,0,0]
     for ngram in top2String:
