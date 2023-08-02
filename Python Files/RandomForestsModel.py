@@ -28,16 +28,16 @@ def logRegModel(dataset):
     y_pred = model.predict(X_test)
 
     #evaluate
-    #accuracy = accuracy_score(y_test, y_pred)
-    #precision = precision_score(y_test, y_pred)
-    #recall = recall_score(y_test, y_pred)
-    #f1 = f1_score(y_test, y_pred)
+    accuracy = accuracy_score(y_test, y_pred)
+    precision = precision_score(y_test, y_pred)
+    recall = recall_score(y_test, y_pred)
+    f1 = f1_score(y_test, y_pred)
 
 
-    #print("accuracy: ", accuracy)
-    #print("precision: ", precision)
-    #print("recall: ", recall)
-    #print("f1: ", f1)
+    print("accuracy: ", accuracy)
+    print("precision: ", precision)
+    print("recall: ", recall)
+    print("f1: ", f1)
 
     return model
     

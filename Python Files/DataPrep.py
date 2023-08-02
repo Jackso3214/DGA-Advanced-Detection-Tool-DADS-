@@ -18,11 +18,12 @@ import DomainNgrams as dngrams
 import NumCountCalculator as numCount
 
 #load Dataset function
-def load_DGA_data():
-    return pd.read_csv("CSVs\\trainingDataset\\dga_dataset_10k_set1.csv")
+def load_DGA_data(path):
+    return pd.read_csv(path)
 
-def Export_DGA_data(dataframe):
-    dataframe.to_csv("CSVs\output\outputTable10k_set1.csv")
+def Export_DGA_data(dataframe, location):
+    print("outputted file to location: ", location)
+    dataframe.to_csv(location)
 
 def readNgram(path):
     temp = []
@@ -34,9 +35,9 @@ def readNgram(path):
     return temp
     
 
-def prepData():
+def prepData(path, outputPath):
     #load the dataset
-    DGAList = load_DGA_data()
+    DGAList = load_DGA_data(path)
     unmodifiedDGAList = DGAList
     #calculate size of dataset
     #print(DGAList.head())
@@ -271,7 +272,7 @@ def prepData():
 
     
     #output to a file
-    Export_DGA_data(DGAList)
+    Export_DGA_data(DGAList, outputPath)
     
 
 
