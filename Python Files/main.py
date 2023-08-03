@@ -32,7 +32,7 @@ def LoadModelOption():
         
 
 def TestDomain(domain):
-    print("Loading the currently trained model:\n")
+    print("Loading the currently trained model\n")
     trainedModel = LoadModelOption()
     print("Extracting features of domain: ", domain, "\n")
     testing = prep.prepDataTest(domain)
@@ -70,7 +70,9 @@ parser.add_argument('option', type=str, choices=["prep","train","test"],
 
 parser.add_argument('--dataset', type=str, help="used to set the file location of the dataset")
 parser.add_argument('--domain', type=str, help="used to test a domain")
+parser.add_argument('--model', type=str, help="used to select the model ")
 args = parser.parse_args()
+
 
 if args.option == "prep":
     if args.dataset:

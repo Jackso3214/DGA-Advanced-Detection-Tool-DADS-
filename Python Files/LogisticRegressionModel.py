@@ -1,9 +1,12 @@
 import pandas as pd
 import numpy as np
+from sklearn.utils._testing import ignore_warnings
+from sklearn.exceptions import ConvergenceWarning
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import precision_score, recall_score, accuracy_score, f1_score
 
+@ignore_warnings(category=ConvergenceWarning)
 def logRegModel(dataset):
     DGAList = dataset
     # Replace infinite updated data with nan
