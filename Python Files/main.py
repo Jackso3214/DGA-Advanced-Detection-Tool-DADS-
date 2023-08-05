@@ -14,7 +14,7 @@ from argparse import ArgumentParser, RawTextHelpFormatter
 #prepare the data and output it to a csv called outputTable750k.csv
 #this is the main script for the program, run this if you want to test and run the program
 
-def PrepDataOption(input="CSVs\\trainingDataset\\dga_dataset_10k_set3.csv", output="CSVs\output\outputDataset.csv"):
+def PrepDataOption(input="CSVs\\trainingDataset\\dga_dataset_10k_set4.csv", output="CSVs\output\outputDataset.csv"):
     prep.prepData(input, output)
 
 def trainModelOption(input="CSVs\\output\\outputDataset.csv"):
@@ -62,32 +62,50 @@ def TestDomain(domain):
 
 
 #main menu for the command line interface
-parser = ArgumentParser(description='POC of detecting DGA domains using machine learning.', formatter_class=RawTextHelpFormatter)
-parser.add_argument('option', type=str, choices=["prep","train","test"], 
-                    help="Choose between 3 options: \nprep: Prepares the dataset (use with --dataset)\n"
-                    "train: Trains the model with the current dataset\n"
-                    "test: tests the currently trained model (use with --domain flag)\n")
+parser = ArgumentParser(description='POC of detecting DGA domains using machine learning.', 
+                        formatter_class=RawTextHelpFormatter)
 
-parser.add_argument('--dataset', type=str, help="used to set the file location of the dataset")
-parser.add_argument('--domain', type=str, help="used to test a domain")
-parser.add_argument('--model', type=str, help="used to select the model ")
+#if no arguments were given
+if len(sys.argv) == 1:
+    print("Use the -h or --help flag to see help.")
+    exit()
+
+#sub parsers
+subparser = parser.add_subparsers()
+
+#create a parser for the prep command
+parser_prep = subparser.add_parser('prep', help="prep: Prepares the dataset")
+parser_prep.add_argument('--dataset', type=str, 
+                        help="used to set the file location of the dataset to train the model")
+                        
+#create a parser for the prep command
+parser_train = subparser.add_parser('train', help="train: Trains the model with the current dataset")
+parser_train.add_argument('--model', type=str, 
+                         help="used to select the ML model to train")
+
+#create a parser for the prep command
+parser_test = subparser.add_parser('test', help="test: tests the currently trained model")
+parser_test.add_argument('--domain', type=str, 
+                         help="used to test a domain")
+
+#take in the arguments
 args = parser.parse_args()
 
-
-if args.option == "prep":
-    if args.dataset:
+if (sys.argv[1] == 'prep'):
+    if (args.dataset):
         print("prepping the dataset to use.\n")
         PrepDataOption(args.dataset)
     else:
-        print("you need to specify the location of the .csv file to train the model using the --dataset option. \n Using the default dataset.")
+        print("you need to specify the location of the .csv file to train the model using the --dataset option.\nUsing the default dataset.\n")
         PrepDataOption()
-elif args.option == "train":
+elif (sys.argv[1] == 'train'):
     print("Training the model using the current dataset.\n")
     trainModelOption()
-elif args.option == "test":
+elif (sys.argv[1] == 'test'):
     if args.domain:
         print("testing the domain: ", args.domain)
         TestDomain(args.domain)
     else:
         print("you need to specify the domain to test using the --domain option.")
+
 
