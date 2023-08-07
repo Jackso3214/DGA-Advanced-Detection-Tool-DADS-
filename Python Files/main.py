@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 import DataPrep as prep
 import LogisticRegressionModel as logreg
+import UnsupervisedModels as unsup
 import saveModel as sm
 import os.path
 import sys
@@ -25,7 +26,7 @@ def trainModelOption(input="CSVs\\output\\outputDataset.csv"):
 
 def LoadModelOption():
     trainedModel = 0
-    if os.path.isfile("saveModel\\saved_object.pkl"):
+    if os.path.isfile("saveModel\\supervisedTrained.pkl"):
         trainedModel = sm.loadPickle()
         
     return trainedModel
@@ -61,6 +62,25 @@ def TestDomain(domain):
     print("===============================================================\n")
 
 
+def TestDomainUnsupervised(domain, affinity='rbf', model='kmean'):
+    print("Extracting features of domain: ", domain, "\n")
+    result = None
+    value_counts = None
+    if model == 'kmean':
+        result, value_counts = unsup.kmean(domain)
+    elif model == 'spectral':
+        print('Using the affinity: ', args.affinity)
+        result, value_counts = unsup.spect(domain, inaffinity = affinity)
+
+    print("===============================================================\n")
+    print(result, "\n")
+    print(value_counts)
+    print("===============================================================\n")
+
+
+    
+
+
 #main menu for the command line interface
 parser = ArgumentParser(description='POC of detecting DGA domains using machine learning.', 
                         formatter_class=RawTextHelpFormatter)
@@ -74,19 +94,29 @@ if len(sys.argv) == 1:
 subparser = parser.add_subparsers()
 
 #create a parser for the prep command
-parser_prep = subparser.add_parser('prep', help="prep: Prepares the dataset")
+parser_prep = subparser.add_parser('prep', help="prep: Prepares the dataset", formatter_class=RawTextHelpFormatter)
 parser_prep.add_argument('--dataset', type=str, 
                         help="used to set the file location of the dataset to train the model")
                         
 #create a parser for the prep command
-parser_train = subparser.add_parser('train', help="train: Trains the model with the current dataset")
+parser_train = subparser.add_parser('train', help="train: Trains the model with the current dataset", formatter_class=RawTextHelpFormatter)
 parser_train.add_argument('--model', type=str, 
-                         help="used to select the ML model to train")
+                         help="used to select the ML model to train ** FUTURE FEATURE **")
 
 #create a parser for the prep command
-parser_test = subparser.add_parser('test', help="test: tests the currently trained model")
+parser_test = subparser.add_parser('test', help="test: tests the currently trained model", formatter_class=RawTextHelpFormatter)
 parser_test.add_argument('--domain', type=str, 
                          help="used to test a domain")
+parser_test.add_argument('-u' ,'--unsupervised', action='store_true', 
+                         help="used to test the data using the unsupervised model")
+parser_test.add_argument('-t','--type', choices=['kmean', 'spectral'], 
+                         help="used to select the type of model to use for unsupervised ML model." 
+                         "\nkmean: use kmean model"
+                         "\nspectral: use spectral model")
+parser_test.add_argument('-a','--affinity', choices=['rbf', 'nearest_neighbors'], ############################################## MAKE SURE TO CHANGE THIS TO WORK WITH AFFINITIES
+                         help="used to select the affinity to use for the spectral unsupervised ML model." 
+                         "\noptions: 'rbf', 'nearest_neighbors' "
+                         "\nNote: Warning may come up")
 
 #take in the arguments
 args = parser.parse_args()
@@ -102,10 +132,46 @@ elif (sys.argv[1] == 'train'):
     print("Training the model using the current dataset.\n")
     trainModelOption()
 elif (sys.argv[1] == 'test'):
-    if args.domain:
-        print("testing the domain: ", args.domain)
-        TestDomain(args.domain)
+
+    #if unsupervised is chosen
+    if args.unsupervised:
+        print("Using the Unsupervised Model testing")
+        #check if domain is supplied
+        if args.domain:
+            print("testing the domain: ", args.domain)
+        else:
+            print("you need to specify the domain to test using the --domain option.")
+            exit()
+
+        #what unsupervised model to use
+        if args.type == 'kmean':
+            print('Using the Kmean Model')
+            TestDomainUnsupervised(args.domain, model='kmean')
+        elif args.type == 'spectral':
+            if args.affinity:
+                print('using the spectral model')
+                TestDomainUnsupervised(args.domain, model='spectral', affinity=args.affinity)
+            else:
+                print("you need to specify the affinity to test using the --a or --affinity option.")
+                exit()
+        else:
+            print('Please select the type to use for the unsupervised model using --type')
+            exit()
+    #if supervised is chosen
     else:
-        print("you need to specify the domain to test using the --domain option.")
+        #check if domain is supplied
+        if args.domain:
+            print("testing the domain: ", args.domain)
+            print("Using the Supervised Model testing")
+            TestDomain(args.domain)
+        else:
+            print("you need to specify the domain to test using the --domain option.")
+            exit()
+
+
+    
+
+        
+
 
 

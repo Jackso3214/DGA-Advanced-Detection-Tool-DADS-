@@ -24,7 +24,7 @@ def VerdHomeData(VerdDataPath):
     verd_data=verd_data.drop(columns='VN')
     return home_data, verd_data
 
-def kmean(indomain, VerdDataPath='CSVs\output\outputTable10k_set4.csv'):
+def kmean(indomain, VerdDataPath='CSVs\output\outputDataset.csv'):
     X=DPU.prepDataTest(indomain)
     X2 = X[['Domain', 'Verdict']]
     X3 = X.iloc[:, 2:]
@@ -51,5 +51,34 @@ def kmean(indomain, VerdDataPath='CSVs\output\outputTable10k_set4.csv'):
     result = grouped.size()##
     return result, value_counts
 
-result, value_counts = kmean('jacksonpablosethjoseph.com')
-print(result, "\n", value_counts)
+
+def spect(indomain, inaffinity,VerdDataPath='CSVs\output\outputDataset.csv',):
+    X=DPU.prepDataTest(indomain)
+    X2 = X[['Domain', 'Verdict']]
+    X3 = X.iloc[:, 2:]
+    home_data, verd_data = VerdHomeData(VerdDataPath)
+    
+    hom_data = pd.concat([home_data, X3], ignore_index=True)
+    ver_data = pd.concat([verd_data, X2], ignore_index=True)
+    scaler = StandardScaler()
+    X_scaled = scaler.fit_transform(hom_data) 
+
+    X_normalized = normalize(X_scaled)
+
+    X_normalized = pd.DataFrame(X_normalized)
+
+    pca = PCA(n_components = 2)
+    X_principal = pca.fit_transform(X_normalized)
+    X_principal = pd.DataFrame(X_principal)
+    X_principal.columns = ['P1', 'P2']
+    spectral_model = SpectralClustering(n_clusters = 4, affinity = inaffinity)
+    labels = spectral_model.fit_predict(X_principal)
+    
+    ver_data['labels']=labels
+    value_counts = ver_data['labels'].value_counts()##
+    grouped = ver_data.groupby(['Verdict', 'labels'])
+    result = grouped.size()##
+    return result, value_counts
+
+#result, value_counts = kmean('iomvwijvaijacsaikj.com')
+#print(result, "\n", value_counts)
