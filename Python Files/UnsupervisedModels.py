@@ -24,7 +24,7 @@ def VerdHomeData(VerdDataPath):
     verd_data=verd_data.drop(columns='VN')
     return home_data, verd_data
 
-def kmean(indomain, VerdDataPath='CSVs\output\outputDataset.csv'):
+def kmean(indomain, VerdDataPath='CSVs\output\outputTable10k_set1.csv'):
     X=DPU.prepDataTest(indomain)
     X2 = X[['Domain', 'Verdict']]
     X3 = X.iloc[:, 2:]
@@ -47,12 +47,13 @@ def kmean(indomain, VerdDataPath='CSVs\output\outputDataset.csv'):
     kmeans.fit(X_principal)
     ver_data['labels']=kmeans.labels_
     value_counts = ver_data['labels'].value_counts()##
-    grouped = ver_data.groupby(['Verdict', 'labels'])
+    grouped = ver_data.groupby(['labels', 'Verdict'])
     result = grouped.size()##
-    return result, value_counts
+    value_test = ver_data.loc[ver_data['Verdict']== 'unknown']
+    return result, value_counts, value_test
 
 
-def spect(indomain, inaffinity,VerdDataPath='CSVs\output\outputDataset.csv',):
+def spect(indomain, inaffinity,VerdDataPath='CSVs\output\outputTable10k_set1.csv',):
     X=DPU.prepDataTest(indomain)
     X2 = X[['Domain', 'Verdict']]
     X3 = X.iloc[:, 2:]
@@ -76,9 +77,10 @@ def spect(indomain, inaffinity,VerdDataPath='CSVs\output\outputDataset.csv',):
     
     ver_data['labels']=labels
     value_counts = ver_data['labels'].value_counts()##
-    grouped = ver_data.groupby(['Verdict', 'labels'])
+    grouped = ver_data.groupby(['labels', 'Verdict'])
     result = grouped.size()##
-    return result, value_counts
+    value_test = ver_data.loc[ver_data['Verdict']== 'unknown']
+    return result, value_counts, value_test
 
 #result, value_counts = kmean('iomvwijvaijacsaikj.com')
 #print(result, "\n", value_counts)

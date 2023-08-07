@@ -7,6 +7,8 @@ import UnsupervisedModels as unsup
 import saveModel as sm
 import os.path
 import sys
+import datetime
+import InputCSV
 from argparse import ArgumentParser, RawTextHelpFormatter
 
 
@@ -62,16 +64,28 @@ def TestDomain(domain):
     print("===============================================================\n")
 
 
+def TestDomainBulk(path):
+    #check if the CSV exists
+    if not os.path.isfile(path):
+        print("the CSV file is not found")
+        exit()
+
+    print("Testing a bulk")
+    rows = InputCSV.bulkTestCSV(path)
+
+    InputCSV.bulkTestOutputCSV(rows)
+    
+
+
 def TestDomainUnsupervised(domain, affinity='rbf', model='kmean'):
     print("Extracting features of domain: ", domain, "\n")
     result = None
     value_counts = None
     if model == 'kmean':
-        result, value_counts = unsup.kmean(domain)
+        result, value_counts, value_test = unsup.kmean(domain)
     elif model == 'spectral':
         print('Using the affinity: ', args.affinity)
-        result, value_counts = unsup.spect(domain, inaffinity = affinity)
-
+        result, value_counts, value_test = unsup.spect(domain, inaffinity = affinity)
     print("===============================================================\n")
     print(result, "\n")
     print(value_counts)
@@ -107,16 +121,17 @@ parser_train.add_argument('--model', type=str,
 parser_test = subparser.add_parser('test', help="test: tests the currently trained model", formatter_class=RawTextHelpFormatter)
 parser_test.add_argument('--domain', type=str, 
                          help="used to test a domain")
+parser_test.add_argument('-c', '--csv', type=str, 
+                         help="Used to test a bulk of domains in CSV format using the supervised Model")
 parser_test.add_argument('-u' ,'--unsupervised', action='store_true', 
                          help="used to test the data using the unsupervised model")
 parser_test.add_argument('-t','--type', choices=['kmean', 'spectral'], 
                          help="used to select the type of model to use for unsupervised ML model." 
                          "\nkmean: use kmean model"
                          "\nspectral: use spectral model")
-parser_test.add_argument('-a','--affinity', choices=['rbf', 'nearest_neighbors'], ############################################## MAKE SURE TO CHANGE THIS TO WORK WITH AFFINITIES
+parser_test.add_argument('-a','--affinity', choices=['rbf', 'nearest_neighbors', 'sigmoid', 'laplacian'],
                          help="used to select the affinity to use for the spectral unsupervised ML model." 
-                         "\noptions: 'rbf', 'nearest_neighbors' "
-                         "\nNote: Warning may come up")
+                         "\noptions: 'rbf', 'nearest_neighbors', 'sigmoid', 'laplacian'")
 
 #take in the arguments
 args = parser.parse_args()
@@ -133,6 +148,14 @@ elif (sys.argv[1] == 'train'):
     trainModelOption()
 elif (sys.argv[1] == 'test'):
 
+
+
+    #if the bulk csv test is chosen
+    if args.csv:
+        print("testing the bulk csv")
+        TestDomainBulk(args.csv)
+        exit()
+    
     #if unsupervised is chosen
     if args.unsupervised:
         print("Using the Unsupervised Model testing")
@@ -147,15 +170,17 @@ elif (sys.argv[1] == 'test'):
         if args.type == 'kmean':
             print('Using the Kmean Model')
             TestDomainUnsupervised(args.domain, model='kmean')
+            exit()
         elif args.type == 'spectral':
             if args.affinity:
                 print('using the spectral model')
                 TestDomainUnsupervised(args.domain, model='spectral', affinity=args.affinity)
+                exit()
             else:
                 print("you need to specify the affinity to test using the --a or --affinity option.")
                 exit()
         else:
-            print('Please select the type to use for the unsupervised model using --type')
+            print('Please select the type to use for the unsupervised model using -a or --type')
             exit()
     #if supervised is chosen
     else:
@@ -164,6 +189,7 @@ elif (sys.argv[1] == 'test'):
             print("testing the domain: ", args.domain)
             print("Using the Supervised Model testing")
             TestDomain(args.domain)
+            exit()
         else:
             print("you need to specify the domain to test using the --domain option.")
             exit()
