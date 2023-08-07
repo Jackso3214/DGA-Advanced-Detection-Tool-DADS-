@@ -8,7 +8,7 @@ import saveModel as sm
 import os.path
 import sys
 import datetime
-import InputCSV
+from InputCSV import bulkTestCSV, bulkTestOutputCSV
 from argparse import ArgumentParser, RawTextHelpFormatter
 
 
@@ -69,11 +69,9 @@ def TestDomainBulk(path):
     if not os.path.isfile(path):
         print("the CSV file is not found")
         exit()
+    rows = bulkTestCSV(path)
 
-    print("Testing a bulk")
-    rows = InputCSV.bulkTestCSV(path)
-
-    InputCSV.bulkTestOutputCSV(rows)
+    bulkTestOutputCSV(rows)
     
 
 
@@ -88,7 +86,8 @@ def TestDomainUnsupervised(domain, affinity='rbf', model='kmean'):
         result, value_counts, value_test = unsup.spect(domain, inaffinity = affinity)
     print("===============================================================\n")
     print(result, "\n")
-    print(value_counts)
+    print(value_counts, "\n")
+    print(value_test, "\n")
     print("===============================================================\n")
 
 
@@ -118,13 +117,13 @@ parser_train.add_argument('--model', type=str,
                          help="used to select the ML model to train ** FUTURE FEATURE **")
 
 #create a parser for the prep command
-parser_test = subparser.add_parser('test', help="test: tests the currently trained model", formatter_class=RawTextHelpFormatter)
+parser_test = subparser.add_parser('test', help="test: tests domains using currently trained supervised model", formatter_class=RawTextHelpFormatter)
 parser_test.add_argument('--domain', type=str, 
                          help="used to test a domain")
 parser_test.add_argument('-c', '--csv', type=str, 
                          help="Used to test a bulk of domains in CSV format using the supervised Model")
 parser_test.add_argument('-u' ,'--unsupervised', action='store_true', 
-                         help="used to test the data using the unsupervised model")
+                         help="used to test the domains using the unsupervised model")
 parser_test.add_argument('-t','--type', choices=['kmean', 'spectral'], 
                          help="used to select the type of model to use for unsupervised ML model." 
                          "\nkmean: use kmean model"

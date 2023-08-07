@@ -4,10 +4,16 @@ import DataPrep as prep
 import LogisticRegressionModel as logreg
 import UnsupervisedModels as unsup
 import saveModel as sm
+import os.path
 import csv
 import datetime
-from main import LoadModelOption
 
+def LoadModelOption():
+    trainedModel = 0
+    if os.path.isfile("saveModel\\supervisedTrained.pkl"):
+        trainedModel = sm.loadPickle()
+        
+    return trainedModel
 
 def bulkTestCSV(path):
         
@@ -30,6 +36,10 @@ def bulkTestCSV(path):
 
         #get the verdict
         result = trainedModel.predict(testing)
+        if result == 0:
+            result = 'legit'
+        else:
+            result = 'dga'
 
         #calculate the probability of the domain
         resultProbility = trainedModel.predict_proba(testing)
@@ -44,15 +54,15 @@ def bulkTestCSV(path):
 
         #append the row to the result
         row.append(result)
-        row.append(resultProbility[0])
-        row.append(resultProbility[1])
+        row.append(resultProbility[0]*100)
+        row.append(resultProbility[1]*100)
 
     return rows
 
     
 
 def bulkTestOutputCSV(rows):
-    filename = './bulkTestOutput'
+    filename = './bulkTestOutput_'
     current_time = datetime.datetime.now()
     dateTime = ""
     dateTime += current_time.strftime("%Y%m%d")
@@ -65,3 +75,4 @@ def bulkTestOutputCSV(rows):
     writer=csv.writer(outputfile)
     writer.writerow(field_names)
     writer.writerows(rows)
+    print("outputted file to: ", filename)
