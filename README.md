@@ -21,3 +21,10 @@ py -m venv .
 ```
 pip install -r requirements.txt
 ```
+
+
+#To run the program and see the help, assuming the virtual environment is enabled/activated
+```
+python3 "Python Files/main.py" -h
+
+```
