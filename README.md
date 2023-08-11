@@ -24,7 +24,8 @@ pip install -r requirements.txt
 
 
 #To run the program and see the help, assuming the virtual environment is enabled/activated
+Note: if try python or python3 instead of py if you get an error for python 
 ```
-python3 "Python Files/main.py" -h
+py "Python Files/main.py" -h
 
 ```
