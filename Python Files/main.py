@@ -107,17 +107,17 @@ if len(sys.argv) == 1:
 subparser = parser.add_subparsers()
 
 #create a parser for the prep command
-parser_prep = subparser.add_parser('prep', help="prep: Prepares the dataset", formatter_class=RawTextHelpFormatter)
+parser_prep = subparser.add_parser('prep', help="prep: Prepares the dataset. \"prep -h\" to see help of prep", formatter_class=RawTextHelpFormatter)
 parser_prep.add_argument('--dataset', type=str, 
-                        help="used to set the file location of the dataset to train the model")
+                        help="used to set the file location of the dataset to train the model.")
                         
 #create a parser for the prep command
-parser_train = subparser.add_parser('train', help="train: Trains the model with the current dataset", formatter_class=RawTextHelpFormatter)
+parser_train = subparser.add_parser('train', help="train: Trains the model with the current dataset. \"train -h\" to see help of train", formatter_class=RawTextHelpFormatter)
 parser_train.add_argument('--model', type=str, 
                          help="used to select the ML model to train ** FUTURE FEATURE **")
 
 #create a parser for the prep command
-parser_test = subparser.add_parser('test', help="test: tests domains using currently trained supervised model", formatter_class=RawTextHelpFormatter)
+parser_test = subparser.add_parser('test', help="test: tests domains using currently trained supervised model. \"test -h\" to see help of test", formatter_class=RawTextHelpFormatter)
 parser_test.add_argument('--domain', type=str, 
                          help="used to test a domain")
 parser_test.add_argument('-c', '--csv', type=str, 
@@ -146,8 +146,6 @@ elif (sys.argv[1] == 'train'):
     print("Training the model using the current dataset.\n")
     trainModelOption()
 elif (sys.argv[1] == 'test'):
-
-
 
     #if the bulk csv test is chosen
     if args.csv:
